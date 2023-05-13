@@ -45,7 +45,7 @@
     </androidx.cardview.widget.CardView>
 
     <Spinner
-        android:id="@+id/edit_nama_item"
+        android:id="@+id/spinner_nama_item_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -74,7 +74,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nama_item" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_nama_item_out" />
 
     <EditText
         android:id="@+id/edit_qty_item"
@@ -142,7 +142,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_plat_pengirim" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinner_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -168,7 +168,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_out" />
 
     <CheckBox
         android:id="@+id/checkBox"

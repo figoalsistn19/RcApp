@@ -4,4 +4,5 @@ data class Item constructor(
     var idItem: String = "",
     var namaItem: String = "",
     var tipeQuantity: String? = "",
+    var namaSupplier: String? = ""
 )

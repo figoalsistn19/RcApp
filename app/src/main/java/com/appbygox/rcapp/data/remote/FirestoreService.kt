@@ -24,35 +24,41 @@ class FirestoreService {
             }
     }
 
-    fun addInventoryIn(inventoryIn: InventoryIn, stockItem: Long) {
+    fun addInventoryIn(inventoryIn: InventoryIn, stockItem: Long, success: (Boolean) -> Unit) {
         db.collection("InventoryIn")
             .add(inventoryIn)
             .onSuccessTask { doc ->
                 doc.update("idInventoryIn", doc.id)
+                with( db.collection("Stock").document(inventoryIn.idItem.orEmpty())){
+                    update("idItem", inventoryIn.idItem)
+                    update("namaItem", inventoryIn.namaItem)
+                    update("namaSupplier", inventoryIn.namaSupplier)
+                    update("jumlahItem", stockItem+inventoryIn.jumlahItem.orZero())
+                    update("tipeQuantity", inventoryIn.tipeQuantity)
+                    update("updateAt", inventoryIn.createAt)
+                }
+                    .addOnSuccessListener {
+                        success(true)
+                    }
             }
-       with( db.collection("Stock").document(inventoryIn.idItem.orEmpty())){
-           update("idItem", inventoryIn.idItem)
-           update("namaItem", inventoryIn.namaItem)
-           update("namaSupplier", inventoryIn.namaSupplier)
-           update("jumlahItem", stockItem+inventoryIn.jumlahItem.orZero())
-           update("tipeQuantity", inventoryIn.tipeQuantity)
-           update("updateAt", inventoryIn.createAt)
-       }
     }
 
-    fun addInventoryOut(inventoryOut: InventoryOut, stockItem: Int) {
+    fun addInventoryOut(inventoryOut: InventoryOut, stockItem: Long, success: (Boolean) -> Unit) {
         db.collection("InventoryOut")
             .add(inventoryOut)
             .onSuccessTask { doc ->
                 doc.update("idInventoryOut", doc.id)
+                with( db.collection("Stock").document(inventoryOut.idItem.orEmpty())){
+                    update("idItem", inventoryOut.idItem)
+                    update("namaItem", inventoryOut.namaItem)
+                    update("jumlahItem", stockItem-inventoryOut.jumlahItem.orZero())
+                    update("tipeQuantity", inventoryOut.tipeQuantity)
+                    update("updateAt", inventoryOut.createAt)
+                }
+                    .addOnSuccessListener {
+                        success(true)
+                    }
             }
-        with( db.collection("Stock").document(inventoryOut.idItem.orEmpty())){
-            update("idItem", inventoryOut.idItem)
-            update("namaItem", inventoryOut.namaItem)
-            update("jumlahItem", stockItem-inventoryOut.jumlahItem.orZero())
-            update("tipeQuantity", inventoryOut.tipeQuantity)
-            update("updateAt", inventoryOut.createAt)
-        }
     }
 
     fun getStock(idItem: String): Long {

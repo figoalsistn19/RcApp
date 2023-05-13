@@ -25,6 +25,8 @@ class LoginActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
+        binding.btnLogin.setOnClickListener { login() }
+
     }
     private fun login(){
         binding.progressBar.isVisible = true

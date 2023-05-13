@@ -3,7 +3,11 @@
     <string name="title_inventory_in">In</string>
     <string name="title_stock">Stock</string>
     <string name="title_inventory_out">Out</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="posisi_list">
+        <item>Retur</item>
+        <item>Expired</item>
+        <item>Baru</item>
+    </string-array>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_input_in">InputInActivity</string>
 </resources>
