@@ -90,4 +90,7 @@ class FirestoreService {
         db.collection("Stock")
             .whereLessThan("createAt", today)
 
+    fun getItems() : Query =
+        db.collection("Stock")
+
 }

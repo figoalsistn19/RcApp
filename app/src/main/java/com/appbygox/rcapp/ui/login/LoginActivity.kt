@@ -1,4 +1,4 @@
-package com.appbygox.rcapp.login
+package com.appbygox.rcapp.ui.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
