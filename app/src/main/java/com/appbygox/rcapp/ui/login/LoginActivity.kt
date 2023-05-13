@@ -7,13 +7,17 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import com.appbygox.rcapp.MainActivity
 import com.appbygox.rcapp.data.LoginPref
+import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityLoginBinding
 import timber.log.Timber
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
+    @Inject
+    lateinit var service: FirestoreService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -35,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
                 binding.editPassword.error = "Masukkan password"
             }
             else -> {
-                service.loginStudent(email, password)
+                service.login(email, password)
                     .addSnapshotListener { value, e ->
                         if (e != null) {
                             Timber.d("Listen failed.")
@@ -45,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
                         var id_user : String? = null
                         var nama : String? = null
                         for (doc in value!!) {
-                            id_user = doc.getString("id_student")
+                            id_user = doc.getString("id_user")
                             nama = doc.getString("name")
                         }
                         if (id_user != null && nama != null) {
@@ -53,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                                 setSession(true)
                                 setIdUser(id_user)
                                 setNamaUser(nama)
-                                setRole("student")
+                                setRole("StaffGudang")
                             }
                             binding.progressBar.isVisible = false
                             Toast.makeText(
@@ -61,9 +65,9 @@ class LoginActivity : AppCompatActivity() {
                                 "Login berhasil",
                                 Toast.LENGTH_LONG
                             ).show()
-                            val mainStudIntent = Intent(this, MainActivity::class.java)
-                            mainStudIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            startActivity(mainStudIntent)
+                            val mainActivityIntent = Intent(this, MainActivity::class.java)
+                            mainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(mainActivityIntent)
                         } else {
                             binding.progressBar.isVisible = false
                             Toast.makeText(
