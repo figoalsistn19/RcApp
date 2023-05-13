@@ -12,5 +12,7 @@ class InputItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityInputItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
     }
 }
