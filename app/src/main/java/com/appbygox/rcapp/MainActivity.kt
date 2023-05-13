@@ -10,7 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.appbygox.rcapp.databinding.ActivityMainBinding
-import com.appbygox.rcapp.login.LoginActivity
+import com.appbygox.rcapp.ui.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
