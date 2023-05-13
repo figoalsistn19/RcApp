@@ -16,11 +16,14 @@ class FirestoreService {
             .whereEqualTo("email", email)
             .whereEqualTo("password", password)
 
-    fun addItem(item: Item) {
+    fun addItem(item: Item, success: (Boolean) -> Unit) {
         db.collection("Item")
             .add(item)
             .onSuccessTask { doc ->
                 doc.update("idItem", doc.id)
+                    .addOnSuccessListener {
+                        success(true)
+                    }
             }
     }
 
@@ -42,7 +45,7 @@ class FirestoreService {
                     }
             }
     }
-
+    
     fun addInventoryOut(inventoryOut: InventoryOut, stockItem: Long, success: (Boolean) -> Unit) {
         db.collection("InventoryOut")
             .add(inventoryOut)
@@ -72,31 +75,20 @@ class FirestoreService {
         return stock
     }
 
-    fun getInventoryInNewest(today : Long) : Query =
+    fun getInventoryInNewest() : Query =
         db.collection("InventoryIn")
-            .whereGreaterThan("createAt", today)
+            .orderBy("createAt")
 
-    fun getInventoryInOldest(today : Long) : Query =
-        db.collection("InventoryIn")
-            .whereLessThan("createAt", today)
-
-    fun getInventoryOutNewest(today : Long) : Query =
+    fun getInventoryOutNewest() : Query =
         db.collection("InventoryOut")
-            .whereGreaterThan("createAt", today)
+            .orderBy("createAt")
 
-    fun getInventoryOutOldest(today : Long) : Query =
-        db.collection("InventoryOut")
-            .whereLessThan("createAt", today)
-
-    fun getStockOutNewest(today : Long) : Query =
+    fun getStockNewest() : Query =
         db.collection("Stock")
-            .whereGreaterThan("createAt", today)
-
-    fun getStockOutOldest(today : Long) : Query =
-        db.collection("Stock")
-            .whereLessThan("createAt", today)
+            .orderBy("updateAt")
 
     fun getItems() : Query =
-        db.collection("Stock")
+        db.collection("Item")
+            .orderBy("namaItem")
 
 }

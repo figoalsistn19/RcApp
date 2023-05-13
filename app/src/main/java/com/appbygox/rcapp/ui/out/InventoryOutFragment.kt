@@ -7,11 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.appbygox.rcapp.R
+import com.appbygox.rcapp.data.model.InventoryIn
+import com.appbygox.rcapp.data.model.InventoryOut
+import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.FragmentInventoryInBinding
 import com.appbygox.rcapp.databinding.FragmentInventoryOutBinding
 import com.appbygox.rcapp.ui.stock.StockAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class InventoryOutFragment : Fragment() {
+
+    @Inject
+    lateinit var service: FirestoreService
 
     private lateinit var binding:FragmentInventoryOutBinding
 
@@ -37,8 +47,35 @@ class InventoryOutFragment : Fragment() {
                 setHasFixedSize(true)
             }
         }
+        getInventoryOut()
+    }
 
-//        getAppliedJob()
+    private fun getInventoryOut(){
+        service.getInventoryOutNewest()
+            .addSnapshotListener { value, e ->
+                if (e != null) {
+                    Timber.d("Listen failed.")
+                    return@addSnapshotListener
+                }
+                val listIn = ArrayList<InventoryOut>()
+                for (doc in value!!) {
+                    val idInventoryOut = doc.getString("idInventoryOut")
+                    val idItem = doc.getString("idItem")
+                    val namaItem = doc.getString("namaItem")
+                    val namaToko = doc.getString("namaToko")
+                    val jumlahItem = doc.getLong("jumlahItem")
+                    val tipeQuantity = doc.getString("tipeQuantity")
+                    val returnItem = doc.getString("returnItem")
+                    val namaPengirim = doc.getString("namaPengirim")
+                    val platMobilPengirim = doc.getString("platMobilPengirim")
+                    val noNota = doc.getString("noNota")
+                    val keterangan = doc.getString("keterangan")
+                    val createAt = doc.getLong("createAt")
+                    val createBy = doc.getString("createBy")
+                    listIn.add(InventoryOut(idInventoryOut, idItem, namaItem, namaToko, jumlahItem, tipeQuantity, returnItem, namaPengirim, platMobilPengirim, noNota, keterangan, createAt, createBy ))
+                }
+                inventoryOutAdapter.setData(listIn)
+            }
     }
 
 }
