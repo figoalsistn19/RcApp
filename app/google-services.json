@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "751548811194",
+    "project_id": "rianicheara-93959",
+    "storage_bucket": "rianicheara-93959.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751548811194:android:eb2591f466f452dedebf83",
+        "android_client_info": {
+          "package_name": "com.appbygox.rcapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751548811194-avvj70vhr09ad6fe7udl6bfsgiefj8j9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgD3WfVcMcKRxSzyMrJ_x7U8o7hHO_Jyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751548811194-avvj70vhr09ad6fe7udl6bfsgiefj8j9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

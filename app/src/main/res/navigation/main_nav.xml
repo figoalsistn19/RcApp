@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/navigation_invent_in">
+    <fragment
+        android:id="@+id/navigation_invent_in"
+        android:name="com.appbygox.rcapp.ui.in.InventoryInFragment"
+        android:label="fragment_inventory_in"
+        tools:layout="@layout/fragment_inventory_in" >
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_stock"
+        android:name="com.appbygox.rcapp.ui.stock.StockFragment"
+        android:label="fragment_stock"
+        tools:layout="@layout/fragment_stock" />
+    <fragment
+        android:id="@+id/navigation_invent_out"
+        android:name="com.appbygox.rcapp.ui.out.InventoryOutFragment"
+        android:label="fragment_inventory_out"
+        tools:layout="@layout/fragment_inventory_out" />
+</navigation>

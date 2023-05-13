@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_invent_in"
+        android:icon="@drawable/inventory_in"
+        android:title="@string/title_inventory_in" />
+    <item
+        android:id="@+id/navigation_stock"
+        android:icon="@drawable/ic_stock"
+        android:title="@string/title_stock" />
+    <item
+        android:id="@+id/navigation_invent_out"
+        android:icon="@drawable/inventory_out"
+        android:title="@string/title_inventory_out" />
+</menu>
