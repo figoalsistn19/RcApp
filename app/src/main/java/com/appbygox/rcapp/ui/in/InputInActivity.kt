@@ -190,10 +190,8 @@ class InputInActivity : AppCompatActivity() {
                                             inventoryIn.createAt.orZero(),
                                             success = { success ->
                                                 if (success) {
-                                                    val i = Intent(
-                                                        this@InputInActivity,
-                                                        MainActivity::class.java
-                                                    )
+                                                    val i = Intent(this, MainActivity::class.java)
+                                                    i.putExtra("selected_fragment", R.id.navigation_invent_in) // Ganti dengan ID destinasi Fragment Anda
                                                     i.flags =
                                                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                                     startActivity(i)
