@@ -3,6 +3,7 @@ package com.appbygox.rcapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -31,15 +32,20 @@ class MainActivity : AppCompatActivity() {
 //        }
         supportActionBar?.hide()
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        binding.navView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == navController.graph.startDestinationId) {
-                val selectedFragmentId = intent.getIntExtra("selected_fragment", R.id.navigation_stock) // Ganti dengan ID destinasi Fragment default Anda
-                navController.navigate(selectedFragmentId)
-            }
+        with(binding.navView) {
+            setupWithNavController(navController)
         }
+
+        val selectedFragmentId = intent.getIntExtra("selected_fragment", R.id.navigation_stock)
+        setSelectedBottomNavId(selectedFragmentId)
+    }
+
+    fun setSelectedBottomNavId(selectedBottomNavId: Int) {
+        val view: View = binding.navView.findViewById(selectedBottomNavId)
+        view.performClick()
     }
 }
