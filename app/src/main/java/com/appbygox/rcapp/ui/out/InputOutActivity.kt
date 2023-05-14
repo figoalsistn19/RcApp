@@ -153,53 +153,57 @@ class InputOutActivity : AppCompatActivity() {
                     keterangan = ket,
                     tipeQuantity = tipeQuantity
                 )
-                service.addInventoryOut(inventoryOut, success = { success ->
-                    if(success){
-                        if (service.isStockFirstTime(inventoryOut.idItem.orEmpty())) {
+                service.addInventoryOut(
+                    inventoryOut, success = { success ->
+                        if (success) {
+                            service.checkStock(inventoryOut.idItem.orEmpty(), isStockFirstTime = {
+                                if (it) {
+                                    Toast.makeText(
+                                        this@InputOutActivity,
+                                        "Barang tidak ada di stok",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    val stockExisting =
+                                        service.getStock(inventoryOut.idItem.orEmpty())
+                                    service.updateStock(
+                                        inventoryOut.idItem.orEmpty(),
+                                        stockExisting,
+                                        inventoryOut.jumlahItem.orZero(),
+                                        true,
+                                        success = { success ->
+                                            if (success) {
+                                                val i = Intent(
+                                                    this@InputOutActivity,
+                                                    MainActivity::class.java
+                                                )
+                                                i.flags =
+                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                startActivity(i)
+
+                                                Toast.makeText(
+                                                    this@InputOutActivity,
+                                                    "Berhasil Input Barang",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            } else {
+                                                Toast.makeText(
+                                                    this@InputOutActivity,
+                                                    "Gagal Input Barang",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        })
+                                }
+                            })
+                        } else {
                             Toast.makeText(
                                 this@InputOutActivity,
-                                "Barang tidak ada pada stock",
+                                "Gagal Input Barang",
                                 Toast.LENGTH_LONG
                             ).show()
-                        } else {
-                            val stockExisting = service.getStock(inventoryOut.idItem.orEmpty())
-                            service.updateStock(
-                                inventoryOut.idItem.orEmpty(),
-                                stockExisting,
-                                inventoryOut.jumlahItem.orZero(),
-                                false,
-                                success = { success ->
-                                    if (success) {
-                                        val i = Intent(
-                                            this@InputOutActivity,
-                                            MainActivity::class.java
-                                        )
-                                        i.flags =
-                                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                        startActivity(i)
-
-                                        Toast.makeText(
-                                            this@InputOutActivity,
-                                            "Berhasil Input Barang",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    } else {
-                                        Toast.makeText(
-                                            this@InputOutActivity,
-                                            "Gagal Input Barang",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                })
                         }
-                    } else {
-                        Toast.makeText(
-                            this@InputOutActivity,
-                            "Gagal Input Barang",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                })
+                    })
             }
 
         }

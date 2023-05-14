@@ -110,20 +110,17 @@ class FirestoreService {
         db.collection("Item")
             .orderBy("namaItem")
 
-    fun isStockFirstTime(idItem: String): Boolean {
-        var result = true
-        var jumlahItem: Long? = null
+    fun checkStock(idItem: String, isStockFirstTime: (Boolean) -> Unit) {
         db.collection("Stock")
-            .whereEqualTo("idItem", idItem)
-            .addSnapshotListener { value, error ->
-                for (doc in value!!) {
-                    jumlahItem = doc.getLong("jumlahItem")
-                }
-                if (jumlahItem != null) {
-                    result = false
+            .document(idItem)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    isStockFirstTime(false)
+                } else {
+                    isStockFirstTime(true)
                 }
             }
-        return result
     }
 
 

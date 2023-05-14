@@ -153,41 +153,15 @@ class InputInActivity : AppCompatActivity() {
                 service.addInventoryIn(
                     inventoryIn, success = { success ->
                         if (success) {
-                            if (service.isStockFirstTime(inventoryIn.idItem.orEmpty())) {
-                                service.addStock(inventoryIn, success = { success ->
-                                    if (success) {
-                                        val i =
-                                            Intent(this@InputInActivity, MainActivity::class.java)
-                                        i.flags =
-                                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                        startActivity(i)
-
-                                        Toast.makeText(
-                                            this@InputInActivity,
-                                            "Berhasil Input Barang",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    } else {
-                                        Toast.makeText(
-                                            this@InputInActivity,
-                                            "Gagal Input Barang",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                })
-                            } else {
-                                val stockExisting = service.getStock(inventoryIn.idItem.orEmpty())
-                                service.updateStock(
-                                    inventoryIn.idItem.orEmpty(),
-                                    stockExisting,
-                                    inventoryIn.jumlahItem.orZero(),
-                                    true,
-                                    success = { success ->
+                            service.checkStock(inventoryIn.idItem.orEmpty(), isStockFirstTime = {
+                                if (it) {
+                                    service.addStock(inventoryIn, success = { success ->
                                         if (success) {
-                                            val i = Intent(
-                                                this@InputInActivity,
-                                                MainActivity::class.java
-                                            )
+                                            val i =
+                                                Intent(
+                                                    this@InputInActivity,
+                                                    MainActivity::class.java
+                                                )
                                             i.flags =
                                                 Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                             startActivity(i)
@@ -205,7 +179,39 @@ class InputInActivity : AppCompatActivity() {
                                             ).show()
                                         }
                                     })
-                            }
+                                } else {
+                                    val stockExisting =
+                                        service.getStock(inventoryIn.idItem.orEmpty())
+                                    service.updateStock(
+                                        inventoryIn.idItem.orEmpty(),
+                                        stockExisting,
+                                        inventoryIn.jumlahItem.orZero(),
+                                        true,
+                                        success = { success ->
+                                            if (success) {
+                                                val i = Intent(
+                                                    this@InputInActivity,
+                                                    MainActivity::class.java
+                                                )
+                                                i.flags =
+                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                startActivity(i)
+
+                                                Toast.makeText(
+                                                    this@InputInActivity,
+                                                    "Berhasil Input Barang",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            } else {
+                                                Toast.makeText(
+                                                    this@InputInActivity,
+                                                    "Gagal Input Barang",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        })
+                                }
+                            })
                         } else {
                             Toast.makeText(
                                 this@InputInActivity,
@@ -214,8 +220,9 @@ class InputInActivity : AppCompatActivity() {
                             ).show()
                         }
                     })
-            }
 
+            }
         }
+
     }
 }
