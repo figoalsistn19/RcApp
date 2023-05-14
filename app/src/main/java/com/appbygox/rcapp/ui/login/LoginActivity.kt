@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.appbygox.rcapp.MainActivity
+import com.appbygox.rcapp.R
 import com.appbygox.rcapp.data.LoginPref
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityLoginBinding
@@ -69,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                             val mainActivityIntent = Intent(this, MainActivity::class.java)
+                            mainActivityIntent.putExtra("selected_fragment", R.id.navigation_stock)
                             mainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(mainActivityIntent)
                         } else {
