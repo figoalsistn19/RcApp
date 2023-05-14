@@ -83,15 +83,13 @@ class FirestoreService {
             }
     }
 
-    fun getStock(idItem: String): Long {
-        var stock = 0L
+    fun getStock(idItem: String, stock: (Long) -> Unit) {
         db.collection("Stock")
             .document(idItem)
             .get()
             .addOnSuccessListener {
-                stock = it.getLong("jumlahItem").orZero()
+                stock(it.getLong("jumlahItem").orZero())
             }
-        return stock
     }
 
     fun getInventoryInNewest(): Query =

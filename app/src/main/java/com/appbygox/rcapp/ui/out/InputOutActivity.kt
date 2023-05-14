@@ -164,36 +164,37 @@ class InputOutActivity : AppCompatActivity() {
                                         Toast.LENGTH_LONG
                                     ).show()
                                 } else {
-                                    val stockExisting =
-                                        service.getStock(inventoryOut.idItem.orEmpty())
-                                    service.updateStock(
-                                        inventoryOut.idItem.orEmpty(),
-                                        stockExisting,
-                                        inventoryOut.jumlahItem.orZero(),
-                                        true,
-                                        success = { success ->
-                                            if (success) {
-                                                val i = Intent(
-                                                    this@InputOutActivity,
-                                                    MainActivity::class.java
-                                                )
-                                                i.flags =
-                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                                startActivity(i)
+                                    service.getStock(inventoryOut.idItem.orEmpty(), stock = {
+                                        val stockExisting = it.orZero()
+                                        service.updateStock(
+                                            inventoryOut.idItem.orEmpty(),
+                                            stockExisting,
+                                            inventoryOut.jumlahItem.orZero(),
+                                            false,
+                                            success = { success ->
+                                                if (success) {
+                                                    val i = Intent(
+                                                        this@InputOutActivity,
+                                                        MainActivity::class.java
+                                                    )
+                                                    i.flags =
+                                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                    startActivity(i)
 
-                                                Toast.makeText(
-                                                    this@InputOutActivity,
-                                                    "Berhasil Input Barang",
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                            } else {
-                                                Toast.makeText(
-                                                    this@InputOutActivity,
-                                                    "Gagal Input Barang",
-                                                    Toast.LENGTH_LONG
-                                                ).show()
-                                            }
-                                        })
+                                                    Toast.makeText(
+                                                        this@InputOutActivity,
+                                                        "Berhasil Input Barang",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                } else {
+                                                    Toast.makeText(
+                                                        this@InputOutActivity,
+                                                        "Gagal Input Barang",
+                                                        Toast.LENGTH_LONG
+                                                    ).show()
+                                                }
+                                            })
+                                    })
                                 }
                             })
                         } else {
