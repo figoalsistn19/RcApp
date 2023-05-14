@@ -102,11 +102,11 @@ class FirestoreService {
 
     fun getInventoryInNewest(): Query =
         db.collection("InventoryIn")
-            .orderBy("createAt")
+            .orderBy("createAt", Query.Direction.DESCENDING)
 
     fun getInventoryOutNewest(): Query =
         db.collection("InventoryOut")
-            .orderBy("createAt")
+            .orderBy("createAt", Query.Direction.DESCENDING)
 
     fun getStockNewest(): Query =
         db.collection("Stock")
