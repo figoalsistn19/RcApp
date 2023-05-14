@@ -187,6 +187,7 @@ class InputInActivity : AppCompatActivity() {
                                             stockExisting,
                                             inventoryIn.jumlahItem.orZero(),
                                             true,
+                                            inventoryIn.createAt.orZero(),
                                             success = { success ->
                                                 if (success) {
                                                     val i = Intent(

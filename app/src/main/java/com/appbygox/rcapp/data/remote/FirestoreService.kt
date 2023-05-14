@@ -59,15 +59,23 @@ class FirestoreService {
             .addOnFailureListener { success(false) }
     }
 
-    fun updateStock(idItem: String, jumlahExisting: Long,  jumlahItem: Long, isFromIn: Boolean, success: (Boolean) -> Unit){
+    fun updateStock(idItem: String, jumlahExisting: Long,  jumlahItem: Long, isFromIn: Boolean, updateAt: Long, success: (Boolean) -> Unit){
         if(isFromIn){
+            val updates = hashMapOf<String, Any>(
+                "jumlahItem" to jumlahExisting+jumlahItem,
+                "updateAt" to updateAt
+            )
             db.collection("Stock").document(idItem)
-                .update("jumlahItem", jumlahExisting+jumlahItem)
+                .update(updates)
                 .addOnSuccessListener { success(true) }
                 .addOnFailureListener { success(false) }
         } else {
+            val updates = hashMapOf<String, Any>(
+                "jumlahItem" to jumlahExisting-jumlahItem,
+                "updateAt" to updateAt
+            )
             db.collection("Stock").document(idItem)
-                .update("jumlahItem", jumlahExisting-jumlahItem)
+                .update(updates)
                 .addOnSuccessListener { success(true) }
                 .addOnFailureListener { success(false) }
         }

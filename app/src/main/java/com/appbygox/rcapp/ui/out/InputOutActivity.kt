@@ -171,6 +171,7 @@ class InputOutActivity : AppCompatActivity() {
                                             stockExisting,
                                             inventoryOut.jumlahItem.orZero(),
                                             false,
+                                            inventoryOut.createAt.orZero(),
                                             success = { success ->
                                                 if (success) {
                                                     val i = Intent(
