@@ -22,7 +22,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class InputOutActivity : AppCompatActivity() {
 
-    private  lateinit var binding: ActivityInputOutBinding
+    private lateinit var binding: ActivityInputOutBinding
 
     @Inject
     lateinit var service: FirestoreService
@@ -40,14 +40,15 @@ class InputOutActivity : AppCompatActivity() {
         val listItem = arrayListOf<Item>()
         service.getItems()
             .addSnapshotListener { value, error ->
-                for (doc in value!!){
+                for (doc in value!!) {
                     val idItem = doc.getString("idItem").orEmpty()
                     val namaItem = doc.getString("namaItem").orEmpty()
                     val tipeQuantity = doc.getString("tipeQuantity").orEmpty()
                     val namaSupplier = doc.getString("namaSupplier").orEmpty()
-                    listItem.add(Item(idItem,namaItem,tipeQuantity,namaSupplier))
+                    listItem.add(Item(idItem, namaItem, tipeQuantity, namaSupplier))
                 }
-                val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
+                val adapter =
+                    ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
                 binding.spinnerNamaItemOut.adapter = adapter
             }
         val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
@@ -133,7 +134,7 @@ class InputOutActivity : AppCompatActivity() {
                 binding.editNoNota.error = "Masukkan No. Nota"
             }
             checkBox.not() -> {
-                binding.checkBox.error= "Cek dulu"
+                binding.checkBox.error = "Cek dulu"
             }
 
             else -> {
@@ -153,26 +154,26 @@ class InputOutActivity : AppCompatActivity() {
                     keterangan = ket,
                     tipeQuantity = tipeQuantity
                 )
-                service.addInventoryOut(
-                    inventoryOut, success = { success ->
-                        if (success) {
-                            service.checkStock(inventoryOut.idItem.orEmpty(), isStockFirstTime = {
-                                if (it) {
-                                    Toast.makeText(
-                                        this@InputOutActivity,
-                                        "Barang tidak ada di stok",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                } else {
-                                    service.getStock(inventoryOut.idItem.orEmpty(), stock = {
-                                        val stockExisting = it.orZero()
-                                        service.updateStock(
-                                            inventoryOut.idItem.orEmpty(),
-                                            stockExisting,
-                                            inventoryOut.jumlahItem.orZero(),
-                                            false,
-                                            inventoryOut.createAt.orZero(),
-                                            success = { success ->
+                service.checkStock(inventoryOut.idItem.orEmpty(), isStockFirstTime = {
+                    if (it) {
+                        Toast.makeText(
+                            this@InputOutActivity,
+                            "Barang tidak ada di stok",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        service.getStock(inventoryOut.idItem.orEmpty(), stock = {
+                            val stockExisting = it.orZero()
+                            service.updateStock(
+                                inventoryOut.idItem.orEmpty(),
+                                stockExisting,
+                                inventoryOut.jumlahItem.orZero(),
+                                false,
+                                inventoryOut.createAt.orZero(),
+                                success = { success ->
+                                    if (success) {
+                                        service.addInventoryOut(
+                                            inventoryOut, success = { success ->
                                                 if (success) {
                                                     val i = Intent(
                                                         this@InputOutActivity,
@@ -195,17 +196,17 @@ class InputOutActivity : AppCompatActivity() {
                                                     ).show()
                                                 }
                                             })
-                                    })
-                                }
-                            })
-                        } else {
-                            Toast.makeText(
-                                this@InputOutActivity,
-                                "Gagal Input Barang",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    })
+                                    } else {
+                                        Toast.makeText(
+                                            this@InputOutActivity,
+                                            "Gagal Input Barang",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                })
+                        })
+                    }
+                })
             }
 
         }
