@@ -24,6 +24,8 @@ class InputItemActivity : AppCompatActivity() {
         binding = ActivityInputItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         binding.btnSimpan.setOnClickListener {
             if (binding.checkBox.isChecked) {
                 saveData()
@@ -32,6 +34,15 @@ class InputItemActivity : AppCompatActivity() {
                     .show()
             }
         }
+
+        binding.btnBack.setOnClickListener {
+            onBackPressed()
+        }
+
+        binding.btnBatal.setOnClickListener {
+            onBackPressed()
+        }
+
     }
 
     private fun saveData() {
@@ -39,6 +50,7 @@ class InputItemActivity : AppCompatActivity() {
             val namaItem = editNamaItem.text.toString()
             val tipeKuantiti = editQtyItem.text.toString()
             val namaSupplier = editNamaSupplier.text.toString()
+            val checkBox = checkBox.isChecked
 
             when{
                 namaItem.isEmpty() -> {
@@ -57,7 +69,8 @@ class InputItemActivity : AppCompatActivity() {
                             tipeQuantity = tipeKuantiti,
                             namaSupplier = namaSupplier
                         )
-                    ) {
+                    )
+                    {
                         val i = Intent(this@InputItemActivity, MainActivity::class.java)
                         i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(i)

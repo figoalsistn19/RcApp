@@ -9,9 +9,11 @@ import com.appbygox.rcapp.MainActivity
 import com.appbygox.rcapp.data.LoginPref
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
@@ -35,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
         when {
             email.isEmpty() -> {
-                binding.editEmail.error = "Masukkan email"
+                binding.editEmail.error = "Masukkan username"
             }
             password.isEmpty() -> {
                 binding.editPassword.error = "Masukkan password"
@@ -52,14 +54,13 @@ class LoginActivity : AppCompatActivity() {
                         var nama : String? = null
                         for (doc in value!!) {
                             id_user = doc.getString("id_user")
-                            nama = doc.getString("name")
+                            nama = doc.getString("nama")
                         }
                         if (id_user != null && nama != null) {
                             LoginPref(this).apply {
                                 setSession(true)
                                 setIdUser(id_user)
                                 setNamaUser(nama)
-                                setRole("StaffGudang")
                             }
                             binding.progressBar.isVisible = false
                             Toast.makeText(

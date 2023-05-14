@@ -25,7 +25,7 @@ class InventoryInAdapter constructor (
             with(binding){
                 itemIn.text = "Item : " + data.namaItem
                 supplierIn.text = "Supplier : " + data.namaSupplier
-                quantityIn.text = "Jumlah Item : " + data.jumlahItem
+                quantityIn.text = "Jumlah Item : " + data.jumlahItem + " " + data.tipeQuantity
                 expedisiIn.text = "Ekspedisi : " + data.namaPengirim
                 platMobilIn.text = "Plat Mobil : " + data.platMobilPengirim
                 returIn.text = "Retur / Exp : " + data.returnItem

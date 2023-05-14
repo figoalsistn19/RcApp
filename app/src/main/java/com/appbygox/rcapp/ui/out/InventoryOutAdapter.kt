@@ -26,7 +26,7 @@ class InventoryOutAdapter constructor (
             with(binding){
                 itemIn.text = "Item : " + data.namaItem
                 supplierIn.text = "Toko : " + data.namaToko
-                quantityIn.text = "Jumlah Item : " + data.jumlahItem
+                quantityIn.text = "Jumlah Item : " + data.jumlahItem + " " + data.tipeQuantity
                 pengirimOut.text = "Pengirim : " + data.namaPengirim
                 platMobilOut.text = "Plat Mobil : " + data.platMobilPengirim
                 returOut.text = "Retur / Exp : " + data.returnItem

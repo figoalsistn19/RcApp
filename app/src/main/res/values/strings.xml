@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RcApp</string>
+    <string name="app_name">Rc Inventory</string>
     <string name="title_inventory_in">In</string>
     <string name="title_stock">Stock</string>
     <string name="title_inventory_out">Out</string>

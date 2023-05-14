@@ -9,6 +9,9 @@
         android:name="com.appbygox.rcapp.ui.in.InventoryInFragment"
         android:label="fragment_inventory_in"
         tools:layout="@layout/fragment_inventory_in" >
+        <action
+            android:id="@+id/action_navigation_invent_in_to_inputInActivity"
+            app:destination="@id/inputInActivity" />
     </fragment>
     <fragment
         android:id="@+id/navigation_stock"
@@ -20,4 +23,9 @@
         android:name="com.appbygox.rcapp.ui.out.InventoryOutFragment"
         android:label="fragment_inventory_out"
         tools:layout="@layout/fragment_inventory_out" />
+    <activity
+        android:id="@+id/inputInActivity"
+        android:name="com.appbygox.rcapp.ui.in.InputInActivity"
+        android:label="activity_input_in"
+        tools:layout="@layout/activity_input_in" />
 </navigation>

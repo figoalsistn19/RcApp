@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.appbygox.rcapp.data.model.Stock
-import com.appbygox.rcapp.databinding.ItemListOutBinding
 import com.appbygox.rcapp.databinding.ItemListStockBinding
 import com.appbygox.rcapp.toFormatDate
-import com.appbygox.rcapp.ui.out.InventoryOutAdapter
 
 class StockAdapter constructor (
     private val data: MutableList<Stock> = mutableListOf()
@@ -26,7 +24,7 @@ class StockAdapter constructor (
             with(binding){
                 itemIn.text = "Item : " + data.namaItem
                 supplierIn.text = "Supplier : " + data.namaSupplier
-                quantityIn.text = "Jumlah item : " + data.jumlahItem
+                quantityIn.text = "Jumlah item : " + data.jumlahItem + " " + data.tipeQuantity
                 timeInputIn.text = "diperbaharui : " + data.updateAt.toFormatDate()
             }
 

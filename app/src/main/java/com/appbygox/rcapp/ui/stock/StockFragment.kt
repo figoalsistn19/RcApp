@@ -1,5 +1,6 @@
 package com.appbygox.rcapp.ui.stock
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -45,6 +46,12 @@ class StockFragment : Fragment() {
                 setHasFixedSize(true)
             }
         }
+
+        binding.floatingActionButton3.setOnClickListener {
+            val i = Intent(requireActivity(), InputItemActivity::class.java)
+            startActivity(i)
+        }
+
         getStocks()
     }
 

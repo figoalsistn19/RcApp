@@ -14,8 +14,10 @@ import com.appbygox.rcapp.data.model.InventoryIn
 import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityInputInBinding
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class InputInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInputInBinding
@@ -46,9 +48,9 @@ class InputInActivity : AppCompatActivity() {
                     val namaSupplier = doc.getString("namaSupplier").orEmpty()
                     listItem.add(Item(idItem,namaItem,tipeQuantity,namaSupplier))
                 }
+                val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
+                binding.spinnerNamaItem.adapter = adapter
             }
-        val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
-        binding.spinnerNamaItem.adapter = adapter
 
         binding.spinnerNamaItem.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -90,13 +92,19 @@ class InputInActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        binding.btnSimpan.setOnClickListener { inputIn() }
+        binding.btnSimpan.setOnClickListener {
+            if (binding.checkBox.isChecked) {
+                inputIn()
+            } else {
+                Toast.makeText(this@InputInActivity, "Check terlebih dahulu", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     private fun inputIn() {
 
-        val namaItem = posisi_item.toString()
-        binding.editNamaSupplier.isEnabled=false
+        val namaItem = posisi_item?.namaItem
         val jumlahItem = binding.editQtyItem.text.toString().toLong()
         val namaEkspedisi = binding.editNamaEkspedisi.text.toString()
         val platEkspedisi = binding.editPlatEkspedisi.text.toString()
@@ -105,9 +113,10 @@ class InputInActivity : AppCompatActivity() {
         val ket = binding.editKet.text.toString()
         val inputTime = dueDateMillis
         val namaSupplier = posisi_item?.namaSupplier
+        val tipeQuantity = posisi_item?.tipeQuantity
 
         when {
-            binding.editQtyItem.text.toString().isEmpty() -> {
+            jumlahItem.toString().isEmpty() -> {
                 binding.editQtyItem.error = "Masukan Jumlah Item"
             }
             namaEkspedisi.isEmpty() -> {
@@ -119,7 +128,9 @@ class InputInActivity : AppCompatActivity() {
             noNota.isEmpty() -> {
                 binding.editNoNota.error = "Masukkan No. Nota"
             }
-
+            ket.isEmpty() -> {
+                binding.editKet.error = "Masukan Keterangan"
+            }
             else -> {
                 var id_user = LoginPref(this).getNamaUser().toString()
 
@@ -133,18 +144,22 @@ class InputInActivity : AppCompatActivity() {
                     noNota = noNota,
                     jumlahItem = jumlahItem,
                     returnItem = returTipe,
-                    keterangan = ket
+                    keterangan = ket,
+                    tipeQuantity = tipeQuantity
                 )
-                service.addInventoryIn(inventoryIn,service.getStock(idItem = posisi_item?.idItem.orEmpty())) { id ->
+                service.addInventoryIn(
+                    inventoryIn,service.getStock(idItem = posisi_item?.idItem.orEmpty())
+                )
+                { id ->
                     Toast.makeText(
-                        this@InputInActivity,
-                        "Berhasil Simpan Item",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    this@InputInActivity,
+                    "Berhasil Input Barang",
+                    Toast.LENGTH_LONG
+                ).show()
 
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
+                    val i = Intent(this@InputInActivity, MainActivity::class.java)
+                    i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(i)
                 }
             }
 

@@ -36,7 +36,7 @@ class FirestoreService {
                     update("idItem", inventoryIn.idItem)
                     update("namaItem", inventoryIn.namaItem)
                     update("namaSupplier", inventoryIn.namaSupplier)
-                    update("jumlahItem", stockItem+inventoryIn.jumlahItem.orZero())
+                    update("jumlahItem", stockItem + inventoryIn.jumlahItem.orZero())
                     update("tipeQuantity", inventoryIn.tipeQuantity)
                     update("updateAt", inventoryIn.createAt)
                 }

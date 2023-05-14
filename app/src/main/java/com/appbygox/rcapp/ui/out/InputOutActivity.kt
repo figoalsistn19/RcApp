@@ -15,8 +15,10 @@ import com.appbygox.rcapp.data.model.InventoryOut
 import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityInputOutBinding
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class InputOutActivity : AppCompatActivity() {
 
     private  lateinit var binding: ActivityInputOutBinding
@@ -46,6 +48,8 @@ class InputOutActivity : AppCompatActivity() {
                     val namaSupplier = doc.getString("namaSupplier").orEmpty()
                     listItem.add(Item(idItem,namaItem,tipeQuantity,namaSupplier))
                 }
+                val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
+                binding.spinnerNamaItemOut.adapter = adapter
             }
         val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
         binding.spinnerNamaItemOut.adapter = adapter
@@ -82,11 +86,28 @@ class InputOutActivity : AppCompatActivity() {
             }
         }
 
+        binding.btnBatal.setOnClickListener {
+            onBackPressed()
+        }
+
+        binding.btnBack.setOnClickListener {
+            onBackPressed()
+        }
+
+        binding.btnSimpan.setOnClickListener {
+            if (binding.checkBox.isChecked) {
+                inputOut()
+            } else {
+                Toast.makeText(this@InputOutActivity, "Check terlebih dahulu", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
     }
 
     private fun inputOut() {
 
-        val namaItem = posisi_item.toString()
+        val namaItem = posisi_item?.namaItem
         val jumlahItem = binding.editQtyItem.text.toString().toLong()
         val namaPengirim = binding.editNamaPengirim.text.toString()
         val platEkspedisi = binding.editPlatPengirim.text.toString()
@@ -95,6 +116,8 @@ class InputOutActivity : AppCompatActivity() {
         val ket = binding.editKet.text.toString()
         val inputTime = dueDateMillis
         val namaToko = binding.editNamaToko.text.toString()
+        val tipeQuantity = posisi_item?.tipeQuantity
+        val checkBox = binding.checkBox.isChecked
 
         when {
             binding.editQtyItem.text.toString().isEmpty() -> {
@@ -109,11 +132,14 @@ class InputOutActivity : AppCompatActivity() {
             noNota.isEmpty() -> {
                 binding.editNoNota.error = "Masukkan No. Nota"
             }
+            checkBox.not() -> {
+                binding.checkBox.error= "Cek dulu"
+            }
 
             else -> {
                 var nama_user = LoginPref(this).getNamaUser().toString()
 
-                val inventoryIn = InventoryOut(
+                val inventoryOut = InventoryOut(
                     namaItem = namaItem,
                     createAt = inputTime,
                     namaToko = namaToko,
@@ -123,9 +149,10 @@ class InputOutActivity : AppCompatActivity() {
                     noNota = noNota,
                     jumlahItem = jumlahItem,
                     returnItem = returTipe,
-                    keterangan = ket
+                    keterangan = ket,
+                    tipeQuantity = tipeQuantity
                 )
-                service.addInventoryOut(inventoryIn,service.getStock(idItem = posisi_item?.idItem.orEmpty())) { id ->
+                service.addInventoryOut(inventoryOut,service.getStock(idItem = posisi_item?.idItem.orEmpty())) { id ->
                     Toast.makeText(
                         this@InputOutActivity,
                         "Berhasil Simpan Item",
