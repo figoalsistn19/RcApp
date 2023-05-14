@@ -175,10 +175,8 @@ class InputOutActivity : AppCompatActivity() {
                                         service.addInventoryOut(
                                             inventoryOut, success = { success ->
                                                 if (success) {
-                                                    val i = Intent(
-                                                        this@InputOutActivity,
-                                                        MainActivity::class.java
-                                                    )
+                                                    val i = Intent(this, MainActivity::class.java)
+                                                    i.putExtra("selected_fragment", R.id.navigation_invent_out) // Ganti dengan ID destinasi Fragment Anda
                                                     i.flags =
                                                         Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                                     startActivity(i)

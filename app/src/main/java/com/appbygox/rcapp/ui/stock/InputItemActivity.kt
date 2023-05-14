@@ -72,7 +72,9 @@ class InputItemActivity : AppCompatActivity() {
                     )
                     {
                         val i = Intent(this@InputItemActivity, MainActivity::class.java)
-                        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                        i.putExtra("selected_fragment", R.id.navigation_stock)
+                        i.flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(i)
 
                         Toast.makeText(
