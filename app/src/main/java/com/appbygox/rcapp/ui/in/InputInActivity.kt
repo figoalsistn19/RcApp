@@ -14,6 +14,7 @@ import com.appbygox.rcapp.data.model.InventoryIn
 import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityInputInBinding
+import com.appbygox.rcapp.orZero
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -26,14 +27,12 @@ class InputInActivity : AppCompatActivity() {
     lateinit var service: FirestoreService
 
     private var dueDateMillis: Long = System.currentTimeMillis()
-
     private var posisi_item: Item? = Item()
-
     private var posisi_retur: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityInputInBinding.inflate(layoutInflater)
+        binding = ActivityInputInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         supportActionBar?.hide()
@@ -41,14 +40,15 @@ class InputInActivity : AppCompatActivity() {
         val listItem = arrayListOf<Item>()
         service.getItems()
             .addSnapshotListener { value, error ->
-                for (doc in value!!){
+                for (doc in value!!) {
                     val idItem = doc.getString("idItem").orEmpty()
                     val namaItem = doc.getString("namaItem").orEmpty()
                     val tipeQuantity = doc.getString("tipeQuantity").orEmpty()
                     val namaSupplier = doc.getString("namaSupplier").orEmpty()
-                    listItem.add(Item(idItem,namaItem,tipeQuantity,namaSupplier))
+                    listItem.add(Item(idItem, namaItem, tipeQuantity, namaSupplier))
                 }
-                val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
+                val adapter =
+                    ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
                 binding.spinnerNamaItem.adapter = adapter
             }
 
@@ -84,7 +84,7 @@ class InputInActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnBack.setOnClickListener{
+        binding.btnBack.setOnClickListener {
             onBackPressed()
         }
 
@@ -103,64 +103,117 @@ class InputInActivity : AppCompatActivity() {
     }
 
     private fun inputIn() {
+        var namaUser = LoginPref(this).getNamaUser().toString()
 
-        val namaItem = posisi_item?.namaItem
-        val jumlahItem = binding.editQtyItem.text.toString().toLong()
-        val namaEkspedisi = binding.editNamaEkspedisi.text.toString()
-        val platEkspedisi = binding.editPlatEkspedisi.text.toString()
-        val noNota = binding.editNoNota.text.toString()
-        val returTipe = posisi_retur.toString()
-        val ket = binding.editKet.text.toString()
-        val inputTime = dueDateMillis
-        val namaSupplier = posisi_item?.namaSupplier
-        val tipeQuantity = posisi_item?.tipeQuantity
+        var idItem = posisi_item?.idItem
+        var namaItem = posisi_item?.namaItem
+        var namaSupplier = posisi_item?.namaSupplier
+        var jumlahItem = binding.editQtyItem.text.toString().toLong()
+        var tipeQuantity = posisi_item?.tipeQuantity
+        var returnItem = posisi_retur.toString()
+        var namaPengirim = binding.editNamaEkspedisi.text.toString()
+        var platMobilPengirim = binding.editPlatEkspedisi.text.toString()
+        var noNota = binding.editNoNota.text.toString()
+        var keterangan = binding.editKet.text.toString()
+        var createAt = dueDateMillis
+        var createBy = namaUser
 
         when {
             jumlahItem.toString().isEmpty() -> {
                 binding.editQtyItem.error = "Masukan Jumlah Item"
             }
-            namaEkspedisi.isEmpty() -> {
+            namaPengirim.isEmpty() -> {
                 binding.editNamaEkspedisi.error = "Masukkan Nama Ekspedisi"
             }
-            platEkspedisi.isEmpty() -> {
+            platMobilPengirim.isEmpty() -> {
                 binding.editPlatEkspedisi.error = "Masukkan Plat Ekspedisi"
             }
             noNota.isEmpty() -> {
                 binding.editNoNota.error = "Masukkan No. Nota"
             }
-            ket.isEmpty() -> {
+            keterangan.isEmpty() -> {
                 binding.editKet.error = "Masukan Keterangan"
             }
             else -> {
-                var id_user = LoginPref(this).getNamaUser().toString()
 
                 val inventoryIn = InventoryIn(
+                    idItem = idItem,
                     namaItem = namaItem,
-                    createAt = inputTime,
-                    namaSupplier= namaSupplier,
-                    namaPengirim = namaEkspedisi,
-                    platMobilPengirim = platEkspedisi,
-                    createBy = id_user,
+                    createAt = createAt,
+                    namaSupplier = namaSupplier,
+                    namaPengirim = namaPengirim,
+                    platMobilPengirim = platMobilPengirim,
+                    createBy = createBy,
                     noNota = noNota,
                     jumlahItem = jumlahItem,
-                    returnItem = returTipe,
-                    keterangan = ket,
+                    returnItem = returnItem,
+                    keterangan = keterangan,
                     tipeQuantity = tipeQuantity
                 )
                 service.addInventoryIn(
-                    inventoryIn,service.getStock(idItem = posisi_item?.idItem.orEmpty())
-                )
-                { id ->
-                    Toast.makeText(
-                    this@InputInActivity,
-                    "Berhasil Input Barang",
-                    Toast.LENGTH_LONG
-                ).show()
+                    inventoryIn, success = { success ->
+                        if (success) {
+                            if (service.isStockFirstTime(inventoryIn.idItem.orEmpty())) {
+                                service.addStock(inventoryIn, success = { success ->
+                                    if (success) {
+                                        val i =
+                                            Intent(this@InputInActivity, MainActivity::class.java)
+                                        i.flags =
+                                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                        startActivity(i)
 
-                    val i = Intent(this@InputInActivity, MainActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(i)
-                }
+                                        Toast.makeText(
+                                            this@InputInActivity,
+                                            "Berhasil Input Barang",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            this@InputInActivity,
+                                            "Gagal Input Barang",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                })
+                            } else {
+                                val stockExisting = service.getStock(inventoryIn.idItem.orEmpty())
+                                service.updateStock(
+                                    inventoryIn.idItem.orEmpty(),
+                                    stockExisting,
+                                    inventoryIn.jumlahItem.orZero(),
+                                    true,
+                                    success = { success ->
+                                        if (success) {
+                                            val i = Intent(
+                                                this@InputInActivity,
+                                                MainActivity::class.java
+                                            )
+                                            i.flags =
+                                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                            startActivity(i)
+
+                                            Toast.makeText(
+                                                this@InputInActivity,
+                                                "Berhasil Input Barang",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        } else {
+                                            Toast.makeText(
+                                                this@InputInActivity,
+                                                "Gagal Input Barang",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                    })
+                            }
+                        } else {
+                            Toast.makeText(
+                                this@InputInActivity,
+                                "Gagal Input Barang",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    })
             }
 
         }

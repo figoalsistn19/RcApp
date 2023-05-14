@@ -15,6 +15,7 @@ import com.appbygox.rcapp.data.model.InventoryOut
 import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityInputOutBinding
+import com.appbygox.rcapp.orZero
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,12 +26,10 @@ class InputOutActivity : AppCompatActivity() {
 
     @Inject
     lateinit var service: FirestoreService
-
     private var dueDateMillis: Long = System.currentTimeMillis()
-
     private var posisi_item: Item? = Item()
-
     private var posisi_retur: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInputOutBinding.inflate(layoutInflater)
@@ -107,6 +106,7 @@ class InputOutActivity : AppCompatActivity() {
 
     private fun inputOut() {
 
+        val idItem = posisi_item?.idItem
         val namaItem = posisi_item?.namaItem
         val jumlahItem = binding.editQtyItem.text.toString().toLong()
         val namaPengirim = binding.editNamaPengirim.text.toString()
@@ -137,9 +137,10 @@ class InputOutActivity : AppCompatActivity() {
             }
 
             else -> {
-                var nama_user = LoginPref(this).getNamaUser().toString()
+                val nama_user = LoginPref(this).getNamaUser().toString()
 
                 val inventoryOut = InventoryOut(
+                    idItem = idItem,
                     namaItem = namaItem,
                     createAt = inputTime,
                     namaToko = namaToko,
@@ -152,17 +153,53 @@ class InputOutActivity : AppCompatActivity() {
                     keterangan = ket,
                     tipeQuantity = tipeQuantity
                 )
-                service.addInventoryOut(inventoryOut,service.getStock(idItem = posisi_item?.idItem.orEmpty())) { id ->
-                    Toast.makeText(
-                        this@InputOutActivity,
-                        "Berhasil Simpan Item",
-                        Toast.LENGTH_LONG
-                    ).show()
+                service.addInventoryOut(inventoryOut, success = { success ->
+                    if(success){
+                        if (service.isStockFirstTime(inventoryOut.idItem.orEmpty())) {
+                            Toast.makeText(
+                                this@InputOutActivity,
+                                "Barang tidak ada pada stock",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            val stockExisting = service.getStock(inventoryOut.idItem.orEmpty())
+                            service.updateStock(
+                                inventoryOut.idItem.orEmpty(),
+                                stockExisting,
+                                inventoryOut.jumlahItem.orZero(),
+                                false,
+                                success = { success ->
+                                    if (success) {
+                                        val i = Intent(
+                                            this@InputOutActivity,
+                                            MainActivity::class.java
+                                        )
+                                        i.flags =
+                                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                        startActivity(i)
 
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                }
+                                        Toast.makeText(
+                                            this@InputOutActivity,
+                                            "Berhasil Input Barang",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            this@InputOutActivity,
+                                            "Gagal Input Barang",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                })
+                        }
+                    } else {
+                        Toast.makeText(
+                            this@InputOutActivity,
+                            "Gagal Input Barang",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                })
             }
 
         }
