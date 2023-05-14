@@ -33,12 +33,12 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        val selectedFragmentId = intent.getIntExtra("selected_fragment", R.id.navigation_stock) // Ganti dengan ID destinasi Fragment default Anda
+        navController.navigate(selectedFragmentId)
         navController = navHostFragment.navController
         binding.apply {
             navView.setupWithNavController(navController)
         }
-
-        val selectedFragmentId = intent.getIntExtra("selected_fragment", R.id.navigation_stock) // Ganti dengan ID destinasi Fragment default Anda
-        navController.navigate(selectedFragmentId)
     }
 }
