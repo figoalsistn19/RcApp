@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/navigation_invent_in">
+    app:startDestination="@id/navigation_stock">
     <fragment
         android:id="@+id/navigation_invent_in"
         android:name="com.appbygox.rcapp.ui.in.InventoryInFragment"

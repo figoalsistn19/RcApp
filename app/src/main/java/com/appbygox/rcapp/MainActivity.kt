@@ -31,14 +31,15 @@ class MainActivity : AppCompatActivity() {
 //        }
         supportActionBar?.hide()
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        binding.navView.setupWithNavController(navController)
 
-        val selectedFragmentId = intent.getIntExtra("selected_fragment", R.id.navigation_stock) // Ganti dengan ID destinasi Fragment default Anda
-        navController = navHostFragment.navController
-        navController.navigate(selectedFragmentId)
-        binding.apply {
-            navView.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == navController.graph.startDestinationId) {
+                val selectedFragmentId = intent.getIntExtra("selected_fragment", R.id.navigation_stock) // Ganti dengan ID destinasi Fragment default Anda
+                navController.navigate(selectedFragmentId)
+            }
         }
     }
 }
