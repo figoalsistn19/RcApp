@@ -1,10 +1,5 @@
 package com.appbygox.rcapp.data.remote
 
-import android.content.Intent
-import android.widget.Toast
-import androidx.core.view.isVisible
-import com.appbygox.rcapp.MainActivity
-import com.appbygox.rcapp.data.LoginPref
 import com.appbygox.rcapp.data.model.InventoryIn
 import com.appbygox.rcapp.data.model.InventoryOut
 import com.appbygox.rcapp.data.model.Item
@@ -110,7 +105,7 @@ class FirestoreService {
 
     fun getStockNewest(): Query =
         db.collection("Stock")
-            .orderBy("updateAt")
+            .orderBy("namaItem", Query.Direction.ASCENDING)
 
     fun getItems(): Query =
         db.collection("Item")

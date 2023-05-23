@@ -61,12 +61,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
+    <TextView
+        android:id="@+id/new_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
+        android:gravity="center_vertical"
+        android:hint="Pilih Item"
+        android:padding="12dp"
+        android:background="@drawable/et_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_nama_item" />
+
     <EditText
         android:id="@+id/edit_qty_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/et_bg"
         android:fontFamily="@font/nunito_semibold"
@@ -76,7 +90,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_nama_item" />
+        app:layout_constraintTop_toBottomOf="@+id/new_spinner" />
 
     <EditText
         android:id="@+id/edit_nama_ekspedisi"

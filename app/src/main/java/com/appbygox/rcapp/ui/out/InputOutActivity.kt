@@ -1,16 +1,15 @@
 package com.appbygox.rcapp.ui.out
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.appbygox.rcapp.MainActivity
 import com.appbygox.rcapp.R
 import com.appbygox.rcapp.data.LoginPref
-import com.appbygox.rcapp.data.model.InventoryIn
 import com.appbygox.rcapp.data.model.InventoryOut
 import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.remote.FirestoreService

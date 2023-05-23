@@ -1,12 +1,19 @@
 package com.appbygox.rcapp.ui.`in`
 
+import android.app.Dialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.appbygox.rcapp.MainActivity
 import com.appbygox.rcapp.R
 import com.appbygox.rcapp.data.LoginPref
@@ -18,6 +25,7 @@ import com.appbygox.rcapp.orZero
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class InputInActivity : AppCompatActivity() {
 
@@ -29,6 +37,9 @@ class InputInActivity : AppCompatActivity() {
     private var dueDateMillis: Long = System.currentTimeMillis()
     private var posisi_item: Item? = Item()
     private var posisi_retur: String? = ""
+    private lateinit var dialog: Dialog
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +63,7 @@ class InputInActivity : AppCompatActivity() {
                 binding.spinnerNamaItem.adapter = adapter
             }
 
+
         binding.spinnerNamaItem.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -64,6 +76,39 @@ class InputInActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // write code to perform some action
             }
+        }
+
+        binding.newSpinner.setOnClickListener {
+            dialog = Dialog(this@InputInActivity)
+            dialog.setContentView(R.layout.dialog_searchable_spinner)
+            dialog.window?.setLayout(650,800)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            val editText: EditText = dialog.findViewById(R.id.edit_text)
+            val listView: ListView = dialog.findViewById(R.id.list_view)
+
+            val adapter: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_list_item_1, listItem.map {it.namaItem})
+            listView.adapter = adapter
+
+            val textWatcher = object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    adapter.filter.filter(s)
+                }
+            }
+
+            editText.addTextChangedListener(textWatcher)
+
+            listView.setOnItemClickListener { parent, _, position, _ ->
+                val selectedItem = parent.getItemAtPosition(position) as String
+                binding.newSpinner.text = selectedItem
+                dialog.dismiss()
+            }
+
         }
 
         val listRetur = resources.getStringArray(R.array.posisi_list)

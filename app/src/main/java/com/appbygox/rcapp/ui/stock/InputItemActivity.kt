@@ -50,7 +50,6 @@ class InputItemActivity : AppCompatActivity() {
             val namaItem = editNamaItem.text.toString()
             val tipeKuantiti = editQtyItem.text.toString()
             val namaSupplier = editNamaSupplier.text.toString()
-            val checkBox = checkBox.isChecked
 
             when{
                 namaItem.isEmpty() -> {

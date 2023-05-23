@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.appbygox.rcapp.data.model.InventoryOut
-import com.appbygox.rcapp.databinding.ItemListInBinding
 import com.appbygox.rcapp.databinding.ItemListOutBinding
 import com.appbygox.rcapp.toFormatDate
-import com.appbygox.rcapp.ui.`in`.InventoryInAdapter
 
 class InventoryOutAdapter constructor (
     private val data: MutableList<InventoryOut> = mutableListOf()

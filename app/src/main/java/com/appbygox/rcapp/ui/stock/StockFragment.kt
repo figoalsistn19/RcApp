@@ -2,16 +2,16 @@ package com.appbygox.rcapp.ui.stock
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.appbygox.rcapp.R
+import com.appbygox.rcapp.data.LoginPref
 import com.appbygox.rcapp.data.model.Stock
 import com.appbygox.rcapp.data.remote.FirestoreService
-import com.appbygox.rcapp.databinding.FragmentInventoryInBinding
 import com.appbygox.rcapp.databinding.FragmentStockBinding
+import com.appbygox.rcapp.ui.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -52,6 +52,10 @@ class StockFragment : Fragment() {
             startActivity(i)
         }
 
+        binding.floatingActionButton5.setOnClickListener {
+            logout()
+        }
+
         getStocks()
     }
 
@@ -74,6 +78,14 @@ class StockFragment : Fragment() {
                 }
                 stockAdapter.setData(listStock)
             }
+    }
+
+    private fun logout(){
+        val isLogin = LoginPref(requireActivity())
+        isLogin.logout()
+        val i = Intent(requireActivity(), LoginActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(i)
     }
 
 }

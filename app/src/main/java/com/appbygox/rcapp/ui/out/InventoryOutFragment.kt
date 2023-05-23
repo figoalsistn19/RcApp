@@ -2,19 +2,14 @@ package com.appbygox.rcapp.ui.out
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.appbygox.rcapp.R
-import com.appbygox.rcapp.data.model.InventoryIn
 import com.appbygox.rcapp.data.model.InventoryOut
 import com.appbygox.rcapp.data.remote.FirestoreService
-import com.appbygox.rcapp.databinding.FragmentInventoryInBinding
 import com.appbygox.rcapp.databinding.FragmentInventoryOutBinding
-import com.appbygox.rcapp.ui.stock.InputItemActivity
-import com.appbygox.rcapp.ui.stock.StockAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject

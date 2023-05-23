@@ -1,11 +1,10 @@
 package com.appbygox.rcapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.appbygox.rcapp.R
+import androidx.appcompat.app.AppCompatActivity
 import com.appbygox.rcapp.databinding.ActivitySplashScreenBinding
 import com.appbygox.rcapp.ui.login.LoginActivity
 
