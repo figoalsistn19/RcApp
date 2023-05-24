@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appbygox.rcapp.MainActivity
 import com.appbygox.rcapp.R
 import com.appbygox.rcapp.data.LoginPref
@@ -22,6 +24,7 @@ import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityInputInBinding
 import com.appbygox.rcapp.orZero
+import com.appbygox.rcapp.ui.`in`.adapter.ItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,6 +33,7 @@ import javax.inject.Inject
 class InputInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInputInBinding
+    private lateinit var itemAdapter: ItemAdapter
 
     @Inject
     lateinit var service: FirestoreService
@@ -69,10 +73,15 @@ class InputInActivity : AppCompatActivity() {
                     dialog.show()
 
                     val editText: EditText = dialog.findViewById(R.id.edit_text)
-                    val listView: ListView = dialog.findViewById(R.id.list_view)
+                    val listView: RecyclerView = dialog.findViewById(R.id.list_view)
+                    listView.layoutManager = LinearLayoutManager(this)
 
-                    val adapter: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_list_item_1, listItem.map {it.namaItem})
-                    listView.adapter = adapter
+                    itemAdapter = ItemAdapter(listItem, onClick = {
+                        binding.newSpinner.text = it.namaItem
+                        posisi_item = it
+                        dialog.dismiss()
+                    })
+                    listView.adapter = itemAdapter
 
                     val textWatcher = object : TextWatcher {
                         override fun afterTextChanged(s: Editable?) {
@@ -80,92 +89,14 @@ class InputInActivity : AppCompatActivity() {
                         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                         }
                         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                            adapter.filter.filter(s)
+                            itemAdapter.updateData(listItem.filter { it.namaItem.contains(s.toString().toLowerCase()) })
                         }
                     }
 
                     editText.addTextChangedListener(textWatcher)
 
-//                    listView.setOnItemClickListener { parent, _, position, _ ->
-//                        val selectItems = parent.getItemAtPosition(position) as String
-//                        binding.newSpinner.text = selectItems
-//                        dialog.dismiss()
-//                    }
-                    listView.onItemSelectedListener = object :
-                    AdapterView.OnItemSelectedListener{
-                        override fun onItemSelected(
-                            parent: AdapterView<*>?,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                        ) {
-                            posisi_item = listItem[position]
-                            dialog.dismiss()
-                        }
-
-                        override fun onNothingSelected(parent: AdapterView<*>?) {
-                            // write code to perform some action
-                        }
-                    }
-
                 }
             }
-
-
-//        binding.spinnerNamaItem.onItemSelectedListener = object :
-//            AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>,
-//                view: View, position: Int, id: Long
-//            ) {
-//                posisi_item = listItem[position]
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>) {
-//                // write code to perform some action
-//            }
-//        }
-
-//        binding.newSpinner.setOnClickListener {
-//            dialog = Dialog(this@InputInActivity)
-//            dialog.setContentView(R.layout.dialog_searchable_spinner)
-//            dialog.window?.setLayout(650,800)
-//            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            dialog.show()
-//
-//            val editText: EditText = dialog.findViewById(R.id.edit_text)
-//            val listView: ListView = dialog.findViewById(R.id.list_view)
-//
-//            val adapter: ArrayAdapter<String> = ArrayAdapter(this, android.R.layout.simple_list_item_1, listItem.map {it.namaItem})
-//            listView.adapter = adapter
-//
-//            val textWatcher = object : TextWatcher {
-//                override fun afterTextChanged(s: Editable?) {
-//                }
-//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//                }
-//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                    adapter.filter.filter(s)
-//                }
-//            }
-//
-//            editText.addTextChangedListener(textWatcher)
-//
-//            listView.onItemSelectedListener = object :
-//                AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(
-//                    parent: AdapterView<*>,
-//                    view: View, position: Int, id: Long
-//                ) {
-//                    posisi_item = listItem[position]
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>) {
-//                    // write code to perform some action
-//                }
-//            }
-//
-//        }
 
         val listRetur = resources.getStringArray(R.array.posisi_list)
         val adapterRetur = ArrayAdapter(this, R.layout.spinner_item, listRetur)
