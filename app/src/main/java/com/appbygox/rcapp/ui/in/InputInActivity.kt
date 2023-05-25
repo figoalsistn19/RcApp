@@ -163,9 +163,6 @@ class InputInActivity : AppCompatActivity() {
             noNota.isEmpty() -> {
                 binding.editNoNota.error = "Masukkan No. Nota"
             }
-            keterangan.isEmpty() -> {
-                binding.editKet.error = "Masukan Keterangan"
-            }
             else -> {
 
                 val inventoryIn = InventoryIn(

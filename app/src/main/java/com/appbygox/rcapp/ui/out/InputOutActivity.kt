@@ -1,12 +1,20 @@
 package com.appbygox.rcapp.ui.out
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appbygox.rcapp.MainActivity
 import com.appbygox.rcapp.R
 import com.appbygox.rcapp.data.LoginPref
@@ -15,6 +23,7 @@ import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityInputOutBinding
 import com.appbygox.rcapp.orZero
+import com.appbygox.rcapp.ui.`in`.adapter.ItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -22,12 +31,14 @@ import javax.inject.Inject
 class InputOutActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInputOutBinding
+    private lateinit var itemAdapter: ItemAdapter
 
     @Inject
     lateinit var service: FirestoreService
     private var dueDateMillis: Long = System.currentTimeMillis()
     private var posisi_item: Item? = Item()
     private var posisi_retur: String? = ""
+    private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,25 +57,40 @@ class InputOutActivity : AppCompatActivity() {
                     val namaSupplier = doc.getString("namaSupplier").orEmpty()
                     listItem.add(Item(idItem, namaItem, tipeQuantity, namaSupplier))
                 }
-                val adapter =
-                    ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
-                binding.spinnerNamaItemOut.adapter = adapter
+//                val adapter =
+//                    ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
+//                binding.spinnerNamaItemOut.adapter = adapter
             }
-        val adapter = ArrayAdapter(this, R.layout.spinner_item, listItem.map { it.namaItem })
-        binding.spinnerNamaItemOut.adapter = adapter
+        binding.newSpinnerOut.setOnClickListener {
+            dialog = Dialog(this@InputOutActivity)
+            dialog.setContentView(R.layout.dialog_searchable_spinner)
+            dialog.window?.setLayout(650,800)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
 
-        binding.spinnerNamaItemOut.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View, position: Int, id: Long
-            ) {
-                posisi_item = listItem[position]
+            val editText: EditText = dialog.findViewById(R.id.edit_text)
+            val listView: RecyclerView = dialog.findViewById(R.id.list_view)
+            listView.layoutManager = LinearLayoutManager(this)
+
+            itemAdapter = ItemAdapter(listItem, onClick = {
+                binding.newSpinnerOut.text = it.namaItem
+                posisi_item = it
+                dialog.dismiss()
+            })
+            listView.adapter = itemAdapter
+
+            val textWatcher = object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    itemAdapter.updateData(listItem.filter { it.namaItem.contains(s.toString().toLowerCase()) })
+                }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // write code to perform some action
-            }
+            editText.addTextChangedListener(textWatcher)
+
         }
 
         val listRetur = resources.getStringArray(R.array.posisi_list)
