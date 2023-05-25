@@ -33,13 +33,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <SearchView
+        <EditText
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="#CDF0EA"
+            android:hint="Cari stok disini ..."
+            android:textColor="#AE9191"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:drawableStart="@drawable/ic_search"
+            android:padding="12dp"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.cardview.widget.CardView>
