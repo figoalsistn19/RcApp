@@ -56,11 +56,16 @@ class StockFragment : Fragment() {
             logout()
         }
 
-        getStocks()
+        binding.imageButton.setOnClickListener {
+            var text = binding.searchView.text.toString()
+            getStocks(text)
+        }
+
+
     }
 
-    private fun getStocks(){
-        service.getStockNewest()
+    private fun getStocks(text : String){
+        service.getStockNewest(text)
             .addSnapshotListener { value, e ->
                 if (e != null) {
                     Timber.d("Listen failed.")

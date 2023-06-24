@@ -4,18 +4,36 @@ import com.appbygox.rcapp.data.model.InventoryIn
 import com.appbygox.rcapp.data.model.InventoryOut
 import com.appbygox.rcapp.data.model.Item
 import com.appbygox.rcapp.data.model.Stock
+import com.appbygox.rcapp.data.model.Users
 import com.appbygox.rcapp.orZero
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class FirestoreService {
     private val db = Firebase.firestore
+    private val auth = Firebase.auth
+
+//    fun login(email: String, password: String) =
+//        db.collection("User")
+//            .whereEqualTo("email", email)
+//            .whereEqualTo("password", password)
 
     fun login(email: String, password: String) =
-        db.collection("User")
-            .whereEqualTo("email", email)
-            .whereEqualTo("password", password)
+        auth.signInWithEmailAndPassword(email, password)
+
+    fun addUser(user: Users, success: (Boolean) -> Unit){
+        db.collection("users")
+            .add(user)
+            .onSuccessTask { doc ->
+                doc.update("idUser",doc.id)
+                    .addOnSuccessListener { success(true) }
+                    .addOnFailureListener { success(false)}
+            }
+    }
+
+
 
     fun addItem(item: Item, success: (Boolean) -> Unit) {
         db.collection("Item")
@@ -103,9 +121,9 @@ class FirestoreService {
         db.collection("InventoryOut")
             .orderBy("createAt", Query.Direction.DESCENDING)
 
-    fun getStockNewest(): Query =
+    fun getStockNewest(text : String): Query =
         db.collection("Stock")
-            .orderBy("namaItem", Query.Direction.ASCENDING)
+            .whereGreaterThanOrEqualTo("namaItem", text)
 
     fun getItems(): Query =
         db.collection("Item")

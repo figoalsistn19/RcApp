@@ -10,6 +10,7 @@ import com.appbygox.rcapp.R
 import com.appbygox.rcapp.data.LoginPref
 import com.appbygox.rcapp.data.remote.FirestoreService
 import com.appbygox.rcapp.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
@@ -54,22 +55,11 @@ class LoginActivity : AppCompatActivity() {
             }
             else -> {
                 service.login(email, password)
-                    .addSnapshotListener { value, e ->
-                        if (e != null) {
-                            Timber.d("Listen failed.")
-                            binding.progressBar.isVisible = false
-                            return@addSnapshotListener
-                        }
-                        var id_user : String? = null
-                        var nama : String? = null
-                        for (doc in value!!) {
-                            id_user = doc.getString("id_user")
-                            nama = doc.getString("nama")
-                        }
-                        if (id_user != null && nama != null) {
+                    .addOnCompleteListener {
+                        if (it.isSuccessful){
+                            var nama: String = email
                             LoginPref(this).apply {
                                 setSession(true)
-                                setIdUser(id_user)
                                 setNamaUser(nama)
                             }
                             binding.progressBar.isVisible = false
@@ -78,19 +68,53 @@ class LoginActivity : AppCompatActivity() {
                                 "Login berhasil",
                                 Toast.LENGTH_LONG
                             ).show()
+
                             val mainActivityIntent = Intent(this, MainActivity::class.java)
                             mainActivityIntent.putExtra("selected_fragment", R.id.navigation_stock)
                             mainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(mainActivityIntent)
-                        } else {
-                            binding.progressBar.isVisible = false
-                            Toast.makeText(
-                                this,
-                                "Email atau password salah",
-                                Toast.LENGTH_LONG
-                            ).show()
+                        }
+                        else {
+                            Toast.makeText(this,it.exception.toString(),Toast.LENGTH_SHORT).show()
                         }
                     }
+//                    .addSnapshotListener { value, e ->
+//                        if (e != null) {
+//                            Timber.d("Listen failed.")
+//                            binding.progressBar.isVisible = false
+//                            return@addSnapshotListener
+//                        }
+//                        var id_user : String? = null
+//                        var nama : String? = null
+//                        for (doc in value!!) {
+//                            id_user = doc.getString("id_user")
+//                            nama = doc.getString("nama")
+//                        }
+//                        if (id_user != null && nama != null) {
+//                            LoginPref(this).apply {
+//                                setSession(true)
+//                                setIdUser(id_user)
+//                                setNamaUser(nama)
+//                            }
+//                            binding.progressBar.isVisible = false
+//                            Toast.makeText(
+//                                this,
+//                                "Login berhasil",
+//                                Toast.LENGTH_LONG
+//                            ).show()
+//                            val mainActivityIntent = Intent(this, MainActivity::class.java)
+//                            mainActivityIntent.putExtra("selected_fragment", R.id.navigation_stock)
+//                            mainActivityIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+//                            startActivity(mainActivityIntent)
+//                        } else {
+//                            binding.progressBar.isVisible = false
+//                            Toast.makeText(
+//                                this,
+//                                "Email atau password salah",
+//                                Toast.LENGTH_LONG
+//                            ).show()
+//                        }
+//                    }
             }
         }
     }

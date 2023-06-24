@@ -13,6 +13,7 @@
         android:icon="@drawable/rc_logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/rc_logo"
+        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.RcApp"
         tools:targetApi="31">
