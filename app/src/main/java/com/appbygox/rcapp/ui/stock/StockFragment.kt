@@ -65,7 +65,7 @@ class StockFragment : Fragment() {
     }
 
     private fun getStocks(text : String){
-        service.getStockNewest(text)
+        service.getStocksSearch(text)
             .addSnapshotListener { value, e ->
                 if (e != null) {
                     Timber.d("Listen failed.")

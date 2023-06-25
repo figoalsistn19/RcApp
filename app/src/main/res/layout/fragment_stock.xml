@@ -41,6 +41,8 @@
             android:hint="Cari stok disini ..."
             android:padding="12dp"
             android:textColor="#AE9191"
+            android:maxLines="1"
+            android:singleLine="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -82,6 +84,16 @@
         android:src="@drawable/common_full_open_on_phone"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButton3"
         app:layout_constraintEnd_toEndOf="@+id/floatingActionButton3" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cek stok di tombol pencarian"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_list_stock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rv_list_stock" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

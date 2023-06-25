@@ -121,7 +121,11 @@ class FirestoreService {
         db.collection("InventoryOut")
             .orderBy("createAt", Query.Direction.DESCENDING)
 
-    fun getStockNewest(text : String): Query =
+    fun getStocks(): Query =
+        db.collection("Stock")
+            .whereGreaterThanOrEqualTo("createAt", Query.Direction.DESCENDING)
+
+    fun getStocksSearch(text : String): Query =
         db.collection("Stock")
             .whereGreaterThanOrEqualTo("namaItem", text)
 
